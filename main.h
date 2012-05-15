@@ -1,3 +1,6 @@
+extern GdkPixmap * pixmap;
+extern GdkVisual * visual;
+extern GLXDrawable * gl_drawable;
 
 extern GtkWidget * window;
 extern GdkDisplay* pGtkDisplay;

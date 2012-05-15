@@ -14,8 +14,12 @@ static gboolean time_handler(GtkWidget *widget)
 
   widget=widget;
 
+  XGetWindowAttributes(disp, GDK_WINDOW_XID(window->window), &wa);
+  glViewport(0, 0, wa.width, wa.height);
+
   rotate();
   expose();
+
   /*  gtk_widget_queue_draw(widget);*/
   return TRUE;
 }
@@ -25,9 +29,6 @@ static gboolean expose_event(GtkWidget *widget, GdkEvent *event, gpointer data)
   widget = widget;
   event = event;
   data = data;
-
- XGetWindowAttributes(disp, GDK_WINDOW_XID(window->window), &wa);
- glViewport(0, 0, wa.width, wa.height);
 
   return FALSE;
 }

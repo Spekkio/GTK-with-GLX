@@ -14,8 +14,8 @@ void rotate()
 {
  glMatrixMode(GL_MODELVIEW);
  glLoadIdentity();
- glRotatef(rot_y_vel*0.05, 0.0, 1.0, 0.0);
- glRotatef(rot_z_vel*0.01, 0.0, 0.0, 1.0);
+ glRotatef(rot_y_vel*0.01, 1.0, 0.0, 1.0);
+ glRotatef(rot_z_vel*0.01, 1.0, 1.0, 1.0);
  glMultMatrixf(rotation_matrix);
  glGetFloatv(GL_MODELVIEW_MATRIX, rotation_matrix);
 }
@@ -23,8 +23,9 @@ void rotate()
 void drawCube(float size)
 {
   glBegin(GL_QUADS);
-  glColor3f(0.7, 0.0, 0.0);
+  glColor3f(0.7, 0.0, 0.2);
   glVertex3f(-size, -size, -size);
+
   glVertex3f( size, -size, -size);
   glVertex3f( size,  size, -size);
   glVertex3f(-size,  size, -size);
@@ -32,6 +33,7 @@ void drawCube(float size)
   glVertex3f( size, -size,  size);
   glVertex3f( size,  size,  size);
   glVertex3f(-size,  size,  size);
+
   glColor3f(0.0, 0.0, 0.7);
   glVertex3f(-size, -size, -size);
   glVertex3f(-size, -size,  size);
@@ -59,26 +61,26 @@ void drawCube(float size)
 
 void expose(void)
 {
- float	aspect_ratio;
- char	info_string[256];
+  float	aspect_ratio;
+  char	info_string[256];
 
- aspect_ratio = (float)(wa.width) / (float)(wa.height);
+  aspect_ratio = (float)(wa.width) / (float)(wa.height);
 
- glMatrixMode(GL_PROJECTION);
- glLoadIdentity();
- glOrtho(-2.50*aspect_ratio, 2.50*aspect_ratio, -2.50, 2.50, 1., 100.);
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+  glOrtho(-2.50*aspect_ratio, 2.50*aspect_ratio, -2.50, 2.50, 1., 100.);
 
- glMatrixMode(GL_MODELVIEW);
- glLoadIdentity();
- gluLookAt(10., 0., 0., 0., 0., 0., 0., 0., 1.);
- glMultMatrixf(rotation_matrix);
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
+  gluLookAt(10., 0., 0., 0., 0., 0., 0., 0., 1.);
+  glMultMatrixf(rotation_matrix);
 
- glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
- drawCube(1.0);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  drawCube(1.0);
 
- glMatrixMode(GL_PROJECTION);
- glLoadIdentity();
- glOrtho(0, (float)wa.width, 0, (float)wa.height, -1., 1.);
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+  glOrtho(0, (float)wa.width, 0, (float)wa.height, -1., 1.);
 
  glMatrixMode(GL_MODELVIEW);
  glLoadIdentity();
@@ -93,6 +95,9 @@ void expose(void)
  glCallLists(strlen(info_string), GL_UNSIGNED_BYTE, info_string);
 
  glXSwapBuffers(disp, GDK_WINDOW_XID(window->window));
+ /*
+ glXSwapBuffers(disp, *gl_drawable);
+ */
 }
 
 void glxSetup()
@@ -107,9 +112,14 @@ void glxSetup()
     {
       printf("\n\tCannot create gl context\n");
       exit(0);
-    }
-
+    }/*
+  glXCreateGLXPixmap(disp, vi, pixmap);
+     */
   glXMakeCurrent(disp, GDK_WINDOW_XID(window->window), glc);
+
+  /*
+  glXMakeCurrent(disp, pixmap, glc);
+  */
   glEnable(GL_DEPTH_TEST);
   glClearColor(0.00, 0.00, 0.40, 1.00);
 
