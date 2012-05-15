@@ -6,29 +6,65 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
+#include <locale.h>
 
 #include "main.h"
+#include "sphere.c"
 
 
 void rotate()
 {
  glMatrixMode(GL_MODELVIEW);
  glLoadIdentity();
- glRotatef(rot_y_vel*0.01, 1.0, 0.0, 1.0);
- glRotatef(rot_z_vel*0.01, 1.0, 1.0, 1.0);
+ glRotatef(rot_y_vel*0.001, 1.0, 0.0, 1.0);
+ glRotatef(rot_z_vel*0.001, 0.0, 1.0, 1.0);
  glMultMatrixf(rotation_matrix);
  glGetFloatv(GL_MODELVIEW_MATRIX, rotation_matrix);
+}
+
+void calcSphere()
+{
+  static char once=1;
+  const float it = 100.0;
+  float i,a;
+  glBegin(GL_QUADS);
+
+  setlocale(LC_ALL,"french");
+
+  for(a=0;a<it;a+=1.0)
+  for(i=0;i<it;i+=1.0)
+    {/*
+      glColor3f(sin(a/(it*3))*2*M_PI,0.5,sin((i/(it/10))*2*M_PI));
+      glVertex3f(sin((a/(it*2))*2*M_PI)*cos(((i)/it)*2*M_PI), sin((a/(it*2))*2*M_PI)*sin(((i)/it)*2*M_PI), cos((a/(it*2))*2*M_PI));
+      glVertex3f(sin((a/(it*2))*2*M_PI)*cos(((i+1)/it)*2*M_PI), sin((a/(it*2))*2*M_PI)*sin(((i+1)/it)*2*M_PI), cos((a/(it*2))*2*M_PI));
+      glVertex3f(sin(((a+1)/(it*2))*2*M_PI)*cos(((i+1)/it)*2*M_PI), sin(((a+1)/(it*2))*2*M_PI)*sin(((i+1)/it)*2*M_PI), cos(((a+1)/(it*2))*2*M_PI));
+      glVertex3f(sin(((a+1)/(it*2))*2*M_PI)*cos(((i)/it)*2*M_PI), sin(((a+1)/(it*2))*2*M_PI)*sin(((i)/it)*2*M_PI), cos(((a+1)/(it*2))*2*M_PI));*/
+      if(once)
+	{
+	  printf("glColor3f(%f , %f , %f);\n",sin(a/(it*3))*2*M_PI,0.5,sin((i/(it/10))*2*M_PI));
+	  printf("glVertex3f(%f , %f , %f);\n",sin((a/(it*2))*2*M_PI)*cos(((i)/it)*2*M_PI), sin((a/(it*2))*2*M_PI)*sin(((i)/it)*2*M_PI), cos((a/(it*2))*2*M_PI));
+	  printf("glVertex3f(%f , %f , %f);\n",sin((a/(it*2))*2*M_PI)*cos(((i+1)/it)*2*M_PI), sin((a/(it*2))*2*M_PI)*sin(((i+1)/it)*2*M_PI), cos((a/(it*2))*2*M_PI));
+	  printf("glVertex3f(%f , %f , %f);\n",sin(((a+1)/(it*2))*2*M_PI)*cos(((i+1)/it)*2*M_PI), sin(((a+1)/(it*2))*2*M_PI)*sin(((i+1)/it)*2*M_PI), cos(((a+1)/(it*2))*2*M_PI));
+	  printf("glVertex3f(%f , %f , %f);\n",sin(((a+1)/(it*2))*2*M_PI)*cos(((i)/it)*2*M_PI), sin(((a+1)/(it*2))*2*M_PI)*sin(((i)/it)*2*M_PI), cos(((a+1)/(it*2))*2*M_PI));
+	}
+    }
+
+  once=0;
+
+  glEnd();
 }
 
 void drawCube(float size)
 {
   glBegin(GL_QUADS);
+
   glColor3f(0.7, 0.0, 0.2);
   glVertex3f(-size, -size, -size);
-
   glVertex3f( size, -size, -size);
   glVertex3f( size,  size, -size);
   glVertex3f(-size,  size, -size);
+
   glVertex3f(-size, -size,  size);
   glVertex3f( size, -size,  size);
   glVertex3f( size,  size,  size);
@@ -39,6 +75,7 @@ void drawCube(float size)
   glVertex3f(-size, -size,  size);
   glVertex3f(-size,  size,  size);
   glVertex3f(-size,  size, -size);
+
   glVertex3f( size, -size, -size);
   glVertex3f( size, -size,  size);
   glVertex3f( size,  size,  size);
@@ -76,7 +113,8 @@ void expose(void)
   glMultMatrixf(rotation_matrix);
 
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  drawCube(1.0);
+  /*drawCube(1.0);*/
+  drawSphere();
 
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();

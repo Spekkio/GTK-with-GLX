@@ -14,7 +14,6 @@
 
 GdkPixmap * pixmap;
 GdkVisual * visual;
-GLXDrawable * gl_drawable;
 
 GtkWidget * window;
 GtkWidget * draw_area;
@@ -44,7 +43,6 @@ void initRoutine()
 
   visual = gdk_visual_get_system();
   pixmap = gdk_pixmap_new(NULL, 500, 500, 24);
-  gl_drawable = (GLXDrawable *)window->window;
 
   gtk_window_set_title(GTK_WINDOW(window), "OpenGL test with GTK");
   gtk_window_set_default_size(GTK_WINDOW(window), 500, 500);
