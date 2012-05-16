@@ -3,12 +3,12 @@
 #include <GL/glx.h>
 #include <GL/glext.h>
 #include <GL/glu.h>
-#include <png.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "main.h"
 #include "glx.h"
+#include "png.h"
 
 #include "callback.c"
 
@@ -30,9 +30,6 @@ float rot_z_vel = 50.0, rot_y_vel = 30.0,DT;
 
 unsigned long int frames;
 float TimeCounter,FPS;
-
-png_structp botten_png, box1_png, box2_png;
-png_infop botten_info, box1_info, box2_info;
 
 long int flags;
 
@@ -79,73 +76,13 @@ void initRoutine()
     }
 }
 
-void loadImageFiles(void)
-{
-  FILE * botten;
-  FILE * box1;
-  FILE * box2;
-  png_bytep * row_p;
-  unsigned long int height;
-  unsigned long int y;
-  
-  botten = fopen("botten.png","r");
-  box1 = fopen("box.png","r");
-  box2 = fopen("box_45.png","r");
-  if(botten && box1 && box2)
-    {
-      botten_png = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
-      box1_png = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
-      box2_png = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
-
-      png_init_io(botten_png, botten);
-      png_init_io(box1_png, box1);
-      png_init_io(box2_png, box2);
-
-      botten_info = png_create_info_struct(botten_png);
-      png_read_info(botten_png, botten_info);
-
-      box1_info=png_create_info_struct(box1_png);
-      png_read_info(box1_png, box1_info);
-
-      box2_info = png_create_info_struct(box2_png);
-      png_read_info(box2_png, box2_info);
-
-      height = png_get_image_height(botten_png, botten_info);
-      /*
-      printf("Width: %lu\n",png_get_image_width(botten_png, botten_info));
-      printf("Height: %lu\n",png_get_image_height(botten_png, botten_info));
-      printf("Color: %i\n",png_get_color_type(botten_png, botten_info));
-      printf("Bits: %i\n",png_get_bit_depth(botten_png, botten_info));
-      */
-      row_p = (png_bytep*) malloc(sizeof(png_bytep)*height);
-      for (y=0; y<height; y++)
-	row_p[y] = (png_byte*) malloc(png_get_rowbytes(botten_png,botten_info));
-
-      png_read_image(botten_png, row_p);
-
-      for (y=0; y<height; y++)
-	free(row_p[y]);
-      free(row_p);
-
-      fclose(botten);
-      fclose(box1);
-      fclose(box2);
-    }
-}
-
-void printVersion(void)
-{
-    printf("\tCompiled with libpng %s; using libpng %s.\n",PNG_LIBPNG_VER_STRING, png_libpng_ver);
-    printf("\tCompiled with zlib %s; using zlib %s.\n", ZLIB_VERSION, zlib_version);
-}
-
 int main(int argc, char ** argv)
 {
   flags = 0x00;
 
   gtk_init(&argc, &argv);
 
-  loadImageFiles();
+  loadTextures();
 
   initRoutine();
 

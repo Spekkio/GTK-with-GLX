@@ -39,6 +39,7 @@ static gboolean delete_event(GtkWidget *widget, GdkEvent *event, gpointer data)
   widget = widget;
   event = event;
   data = data;
+  freeTextures();
   glXMakeCurrent(disp, None, NULL);
   glXDestroyContext(disp, glc);
   gtk_main_quit();
