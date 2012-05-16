@@ -34,6 +34,8 @@ float TimeCounter,FPS;
 png_structp botten_png, box1_png, box2_png;
 png_infop botten_info, box1_info, box2_info;
 
+long int flags;
+
 void initRoutine()
 {
   window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
@@ -139,6 +141,8 @@ void printVersion(void)
 
 int main(int argc, char ** argv)
 {
+  flags = 0x00;
+
   gtk_init(&argc, &argv);
 
   loadImageFiles();

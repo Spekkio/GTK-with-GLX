@@ -15,3 +15,8 @@ extern float rot_z_vel, rot_y_vel,DT;
 extern float TimeCounter,FPS;
 extern unsigned long int frames;
 #define T_UPDATE 1
+
+extern long int flags;
+
+#define QUITTING 0x01
+

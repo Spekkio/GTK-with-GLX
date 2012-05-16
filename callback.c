@@ -11,13 +11,14 @@ static gboolean time_handler(GtkWidget *widget)
 {
   frames++;
 
-  if(gtk_widget_is_drawable(widget))
-    {
-      XGetWindowAttributes(disp, GDK_WINDOW_XID(window->window), &wa);
-      glViewport(0, 0, wa.width, wa.height);
-      rotate();
-      expose();
-    }
+  if(!(flags & QUITTING))
+    if(gtk_widget_is_drawable(widget))
+      {
+	XGetWindowAttributes(disp, GDK_WINDOW_XID(window->window), &wa);
+	glViewport(0, 0, wa.width, wa.height);
+	rotate();
+	expose();
+      }
 
   /*  gtk_widget_queue_draw(widget);*/
   return TRUE;
@@ -34,6 +35,7 @@ static gboolean expose_event(GtkWidget *widget, GdkEvent *event, gpointer data)
 
 static gboolean delete_event(GtkWidget *widget, GdkEvent *event, gpointer data)
 {
+  flags |= QUITTING;
   widget = widget;
   event = event;
   data = data;
