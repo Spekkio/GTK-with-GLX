@@ -10,8 +10,10 @@
 #include <locale.h>
 
 #include "main.h"
-#include "sphere.c"
+#include "glx.h"
+/*#include "sphere.c"*/
 
+GLuint sphere;
 
 void rotate()
 {
@@ -23,10 +25,19 @@ void rotate()
   glGetFloatv(GL_MODELVIEW_MATRIX, rotation_matrix);
 }
 
+void drawSphere()
+{
+  glCallList(sphere);
+}
+
 void calcSphere()
 {
   const float it = 100.0;
   float i,a;
+
+  sphere=glGenLists(1);
+  glNewList(sphere,GL_COMPILE);
+
   glBegin(GL_QUADS);
 
   for(a=0;a<it;a+=1.0)
@@ -40,6 +51,7 @@ void calcSphere()
     }
 
   glEnd();
+  glEndList();
 }
 
 void drawCube(float size)
@@ -160,4 +172,7 @@ void glxSetup()
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
   glGetFloatv(GL_MODELVIEW_MATRIX, rotation_matrix);
+
+  calcSphere();
+
 }
