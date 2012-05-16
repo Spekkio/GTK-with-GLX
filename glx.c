@@ -107,19 +107,19 @@ void expose(void)
   glLoadIdentity();
   glOrtho(0, (float)wa.width, 0, (float)wa.height, -1., 1.);
 
- glMatrixMode(GL_MODELVIEW);
- glLoadIdentity();
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
 
- glColor3f(1.0, 1.0, 1.0);
- sprintf(info_string, "%4.1f seconds * %4.1f fps at %i x %i", TimeCounter, FPS, wa.width, wa.height);
- glRasterPos2i(10, 10);
- glCallLists(strnlen(info_string,256), GL_UNSIGNED_BYTE, info_string);
+  glColor3f(1.0, 1.0, 1.0);
+  sprintf(info_string, "%4.1f seconds * %4.1f fps at %i x %i", TimeCounter, FPS, wa.width, wa.height);
+  glRasterPos2i(10, 10);
+  glCallLists(strnlen(info_string,256), GL_UNSIGNED_BYTE, info_string);
 
- sprintf(info_string, "GLX with GTK test program");
- glRasterPos2i(10, wa.height-32);
- glCallLists(strlen(info_string), GL_UNSIGNED_BYTE, info_string);
+  sprintf(info_string, "GLX with GTK test program");
+  glRasterPos2i(10, wa.height-32);
+  glCallLists(strlen(info_string), GL_UNSIGNED_BYTE, info_string);
 
- glXSwapBuffers(disp, GDK_WINDOW_XID(window->window));
+  glXSwapBuffers(disp, GDK_WINDOW_XID(window->window));
  /*
  glXSwapBuffers(disp, *gl_drawable);
  */

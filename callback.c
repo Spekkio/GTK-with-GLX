@@ -12,13 +12,13 @@ static gboolean time_handler(GtkWidget *widget)
       TimeCounter++;
     }
 
-  widget=widget;
-
-  XGetWindowAttributes(disp, GDK_WINDOW_XID(window->window), &wa);
-  glViewport(0, 0, wa.width, wa.height);
-
-  rotate();
-  expose();
+  if(gtk_widget_is_drawable(widget))
+    {
+      XGetWindowAttributes(disp, GDK_WINDOW_XID(window->window), &wa);
+      glViewport(0, 0, wa.width, wa.height);
+      rotate();
+      expose();
+    }
 
   /*  gtk_widget_queue_draw(widget);*/
   return TRUE;
