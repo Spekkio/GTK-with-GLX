@@ -1,16 +1,15 @@
+static gboolean time_seconds(GtkWidget *widget)
+{
+  TimeCounter++;
+  FPS = frames;
+  frames=0;
+  widget=widget;
+  return TRUE;
+}
+
 static gboolean time_handler(GtkWidget *widget)
 {
-  /*
-  time_t curtime;
-  struct tm *loctime;
-  */
-  static float counter = 0;
-  counter += (T_UPDATE/1000.0);
-  if(counter>=1.0)
-    {
-      counter=0;
-      TimeCounter++;
-    }
+  frames++;
 
   if(gtk_widget_is_drawable(widget))
     {

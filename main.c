@@ -27,6 +27,8 @@ GLXContext glc;
 GLfloat rotation_matrix[16];
 XWindowAttributes wa;
 float rot_z_vel = 50.0, rot_y_vel = 30.0,DT;
+
+unsigned long int frames;
 float TimeCounter,FPS;
 
 png_structp botten_png, box1_png, box2_png;
@@ -47,7 +49,12 @@ void initRoutine()
   gtk_window_set_title(GTK_WINDOW(window), "OpenGL test with GTK");
   gtk_window_set_default_size(GTK_WINDOW(window), 500, 500);
 
-  g_timeout_add(T_UPDATE,(GSourceFunc)time_handler, GTK_WINDOW(window));
+  TimeCounter=0.0;
+  frames=0;
+
+  g_timeout_add(0,(GSourceFunc)time_handler, GTK_WINDOW(window));
+  g_timeout_add_seconds(1,(GSourceFunc)time_seconds, GTK_WINDOW(window));
+
   g_signal_connect(window, "delete-event", G_CALLBACK(delete_event), NULL);
   g_signal_connect(window, "expose-event", G_CALLBACK(expose_event), NULL);
 

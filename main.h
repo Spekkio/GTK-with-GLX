@@ -13,4 +13,5 @@ extern GLfloat rotation_matrix[16];
 extern XWindowAttributes wa;
 extern float rot_z_vel, rot_y_vel,DT;
 extern float TimeCounter,FPS;
+extern unsigned long int frames;
 #define T_UPDATE 1
