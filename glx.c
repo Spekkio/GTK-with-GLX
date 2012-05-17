@@ -16,6 +16,7 @@
 
 GLuint sphere;
 GLuint texture[1];
+GLuint xor_texture;
 
 void rotate()
 {
@@ -101,6 +102,50 @@ void drawCube(float size)
   glDisable(GL_TEXTURE_2D);
 }
 
+void drawXORCube(float size)
+{
+  glEnable(GL_TEXTURE_2D);
+  glBindTexture(GL_TEXTURE_2D, xor_texture);
+
+  glBegin(GL_QUADS);
+
+  /*glColor3f(0.7, 0.0, 0.2);*/
+
+  glTexCoord2f(0.0, 0.0); glVertex3f(-size, -size, -size);
+  glTexCoord2f(1.0, 0.0); glVertex3f( size, -size, -size);
+  glTexCoord2f(1.0, 1.0); glVertex3f( size,  size, -size);
+  glTexCoord2f(0.0, 1.0); glVertex3f(-size,  size, -size);
+
+  glTexCoord2f(0.0, 0.0); glVertex3f(-size, -size,  size);
+  glTexCoord2f(1.0, 0.0); glVertex3f( size, -size,  size);
+  glTexCoord2f(1.0, 1.0); glVertex3f( size,  size,  size);
+  glTexCoord2f(0.0, 1.0); glVertex3f(-size,  size,  size);
+
+  glTexCoord2f(0.0, 0.0); glVertex3f(-size, -size, -size);
+  glTexCoord2f(1.0, 0.0); glVertex3f(-size, -size,  size);
+  glTexCoord2f(1.0, 1.0); glVertex3f(-size,  size,  size);
+  glTexCoord2f(0.0, 1.0); glVertex3f(-size,  size, -size);
+
+  
+  glTexCoord2f(0.0, 0.0); glVertex3f( size, -size, -size);
+  glTexCoord2f(1.0, 0.0); glVertex3f( size, -size,  size);
+  glTexCoord2f(1.0, 1.0); glVertex3f( size,  size,  size);
+  glTexCoord2f(0.0, 1.0); glVertex3f( size,  size, -size);
+ 
+  glTexCoord2f(0.0, 0.0); glVertex3f(-size, -size, -size);
+  glTexCoord2f(1.0, 0.0); glVertex3f(-size, -size,  size);
+  glTexCoord2f(1.0, 1.0); glVertex3f( size, -size,  size);
+  glTexCoord2f(0.0, 1.0); glVertex3f( size, -size, -size);
+  
+  glTexCoord2f(0.0, 0.0); glVertex3f(-size, size, -size);
+  glTexCoord2f(1.0, 0.0); glVertex3f(-size, size,  size);
+  glTexCoord2f(1.0, 1.0); glVertex3f( size, size,  size);
+  glTexCoord2f(0.0, 1.0); glVertex3f( size, size, -size);
+  
+  glEnd();
+  glDisable(GL_TEXTURE_2D);
+}
+
 void expose(void)
 {
   float aspect_ratio;
@@ -120,8 +165,8 @@ void expose(void)
 
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  drawSphere();
-  /*drawCube(1.0);*/
+  /*drawSphere();*/
+  drawXORCube(1.0);
 
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
@@ -149,10 +194,6 @@ void glxSetup()
 {
   char		font_string[128];
   XFontStruct	*font_struct;
-  /*
-  unsigned long int x,y;
-  uint8_t pixels[100*100*3];
-  */
 
   TimeCounter = 0;
 
@@ -187,24 +228,37 @@ void glxSetup()
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
   glGetFloatv(GL_MODELVIEW_MATRIX, rotation_matrix);
-  /*
-  for(y=0;y<100;y++)
-    {
-      for(x=0;x<=100;x++)
-	{
-	  pixels[x*3+100*y*3+0] = sin(((y+x)/100.0)*2*M_PI)*127.0+127.0;
-	  pixels[x*3+100*y*3+1] = sin((x/100.0)*2*M_PI)*127.0+127.0;
-	  pixels[x*3+100*y*3+2] = sin((y/100.0)*2*M_PI)*127.0+127.0;
-	}
-    }
-  */
 
   glGenTextures(1, &texture[0]);
   glBindTexture(GL_TEXTURE_2D, texture[0]);
   glTexImage2D(GL_TEXTURE_2D, 0, 3, box1.width, box1.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, box1.glxRawTexture);
-  /*glTexImage2D(GL_TEXTURE_2D, 0, 3, 100, 100, 0, GL_RGB, GL_UNSIGNED_BYTE, &pixels[0]);*/
+
+  generateXORTexture();
+
   glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
 
   calcSphere();
+}
+
+void generateXORTexture()
+{
+#define XOR_W 256
+#define XOR_H 256
+  uint8_t pixels[XOR_W*XOR_H*3];
+  unsigned int x,y;
+  for(y=0;y<XOR_H;y++)
+    {
+      for(x=0;x<=XOR_W;x++)
+	{
+	  pixels[x*3+XOR_W*y*3+0] = (uint8_t)(x^y);
+	  pixels[x*3+XOR_W*y*3+1] = (uint8_t)(x & y);
+	  pixels[x*3+XOR_W*y*3+2] = (uint8_t)x;
+	}
+    }
+
+  glGenTextures(1, &xor_texture);
+  glBindTexture(GL_TEXTURE_2D, xor_texture);
+
+  glTexImage2D(GL_TEXTURE_2D, 0, 3, XOR_W, XOR_H, 0, GL_RGB, GL_UNSIGNED_BYTE, pixels);
 }

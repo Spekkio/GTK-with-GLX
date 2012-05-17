@@ -23,8 +23,6 @@ texture_t loadTexture(const char * image_file_name)
     {
       image.png = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
 
-      printf("here\n");
-
       image.info = png_create_info_struct(image.png);
 
       if(setjmp(png_jmpbuf(image.png)))
