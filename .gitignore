@@ -2,3 +2,6 @@
 *~
 main
 sphere.c
+sphere.inc
+generate_sphere
+scene.png

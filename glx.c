@@ -120,8 +120,8 @@ void expose(void)
 
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  /*drawSphere();*/
-  drawCube(1.0);
+  drawSphere();
+  /*drawCube(1.0);*/
 
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();

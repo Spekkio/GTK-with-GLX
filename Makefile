@@ -13,4 +13,5 @@ sphere.c: sphere.c.bz2
 	bzip2 -dc sphere.c.bz2 > sphere.c
 
 clean:
-	rm -rf main *.o *~ sphere.c
+	rm -rf main *.o *~ sphere.c \#*\#
+
