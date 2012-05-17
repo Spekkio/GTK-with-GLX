@@ -11,16 +11,18 @@
 
 #include "main.h"
 #include "glx.h"
+#include "png.h"
 /*#include "sphere.c"*/
 
 GLuint sphere;
+GLuint texture[1];
 
 void rotate()
 {
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
-  glRotatef(rot_y_vel*0.001, 1.0, 0.0, 1.0);
-  glRotatef(rot_z_vel*0.001, 0.0, 1.0, 1.0);
+  glRotatef(rot_y_vel*0.001, 1.0, 1.0, 1.0);
+  glRotatef(rot_z_vel*0.001, 1.0, 1.0, 1.0);
   glMultMatrixf(rotation_matrix);
   glGetFloatv(GL_MODELVIEW_MATRIX, rotation_matrix);
 }
@@ -51,59 +53,64 @@ void calcSphere()
     }
 
   glEnd();
+
   glEndList();
+
 }
 
 void drawCube(float size)
 {
+  glEnable(GL_TEXTURE_2D);
+  glBindTexture(GL_TEXTURE_2D, texture[0]);
+
   glBegin(GL_QUADS);
 
-  glColor3f(0.7, 0.0, 0.2);
-  glVertex3f(-size, -size, -size);
-  glVertex3f( size, -size, -size);
-  glVertex3f( size,  size, -size);
-  glVertex3f(-size,  size, -size);
+  /*glColor3f(0.7, 0.0, 0.2);*/
+  glTexCoord2f(1.0/3.0, 2.0/3.0); glVertex3f(-size, -size, -size);
+  glTexCoord2f(2.0/3.0, 2.0/3.0); glVertex3f( size, -size, -size);
+  glTexCoord2f(2.0/3.0, 3.0/3.0); glVertex3f( size,  size, -size);
+  glTexCoord2f(1.0/3.0, 3.0/3.0); glVertex3f(-size,  size, -size);
 
-  glVertex3f(-size, -size,  size);
-  glVertex3f( size, -size,  size);
-  glVertex3f( size,  size,  size);
-  glVertex3f(-size,  size,  size);
+  glTexCoord2f(1.0/3.0, 1.0/3.0); glVertex3f(-size, -size,  size);
+  glTexCoord2f(2.0/3.0, 1.0/3.0); glVertex3f( size, -size,  size);
+  glTexCoord2f(2.0/3.0, 2.0/3.0); glVertex3f( size,  size,  size);
+  glTexCoord2f(1.0/3.0, 2.0/3.0); glVertex3f(-size,  size,  size);
 
-  glColor3f(0.0, 0.0, 0.7);
-  glVertex3f(-size, -size, -size);
-  glVertex3f(-size, -size,  size);
-  glVertex3f(-size,  size,  size);
-  glVertex3f(-size,  size, -size);
+  glTexCoord2f(2.0/3.0, 1.0/3.0); glVertex3f(-size, -size, -size);
+  glTexCoord2f(3.0/3.0, 1.0/3.0); glVertex3f(-size, -size,  size);
+  glTexCoord2f(3.0/3.0, 2.0/3.0); glVertex3f(-size,  size,  size);
+  glTexCoord2f(2.0/3.0, 2.0/3.0); glVertex3f(-size,  size, -size);
 
-  glVertex3f( size, -size, -size);
-  glVertex3f( size, -size,  size);
-  glVertex3f( size,  size,  size);
-  glVertex3f( size,  size, -size);
-
-  glColor3f(0.0, 0.7, 0.0);
-
-  glVertex3f(-size, -size, -size);
-  glVertex3f(-size, -size,  size);
-  glVertex3f( size, -size,  size);
-  glVertex3f( size, -size, -size);
-
-  glVertex3f(-size, size, -size);
-  glVertex3f(-size, size,  size);
-  glVertex3f( size, size,  size);
-  glVertex3f( size, size, -size);
-
+  
+  glTexCoord2f(0.0/3.0, 1.0/3.0); glVertex3f( size, -size, -size);
+  glTexCoord2f(1.0/3.0, 1.0/3.0); glVertex3f( size, -size,  size);
+  glTexCoord2f(1.0/3.0, 2.0/3.0); glVertex3f( size,  size,  size);
+  glTexCoord2f(0.0/3.0, 2.0/3.0); glVertex3f( size,  size, -size);
+ 
+  glTexCoord2f(1.0/3.0, 0.0/3.0); glVertex3f(-size, -size, -size);
+  glTexCoord2f(2.0/3.0, 0.0/3.0); glVertex3f(-size, -size,  size);
+  glTexCoord2f(2.0/3.0, 1.0/3.0); glVertex3f( size, -size,  size);
+  glTexCoord2f(1.0/3.0, 1.0/3.0); glVertex3f( size, -size, -size);
+  
+  glTexCoord2f(0.0/3.0, 0.0/3.0);glVertex3f(-size, size, -size);
+  glTexCoord2f(1.0/3.0, 0.0/3.0);glVertex3f(-size, size,  size);
+  glTexCoord2f(1.0/3.0, 1.0/3.0);glVertex3f( size, size,  size);
+  glTexCoord2f(0.0/3.0, 1.0/3.0);glVertex3f( size, size, -size);
+  
   glEnd();
+  glDisable(GL_TEXTURE_2D);
 }
 
 void expose(void)
 {
-  float	aspect_ratio;
+  float aspect_ratio;
   char	info_string[256];
 
   aspect_ratio = (float)(wa.width) / (float)(wa.height);
 
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
+  
   glOrtho(-2.50*aspect_ratio, 2.50*aspect_ratio, -2.50, 2.50, 1., 100.);
 
   glMatrixMode(GL_MODELVIEW);
@@ -112,8 +119,9 @@ void expose(void)
   glMultMatrixf(rotation_matrix);
 
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  /*drawCube(1.0);*/
-  drawSphere();
+
+  /*drawSphere();*/
+  drawCube(1.0);
 
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
@@ -141,6 +149,10 @@ void glxSetup()
 {
   char		font_string[128];
   XFontStruct	*font_struct;
+  /*
+  unsigned long int x,y;
+  uint8_t pixels[100*100*3];
+  */
 
   TimeCounter = 0;
 
@@ -158,6 +170,9 @@ void glxSetup()
   glXMakeCurrent(disp, pixmap, glc);
   */
   glEnable(GL_DEPTH_TEST);
+  glDepthFunc(GL_LEQUAL);
+  glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+  
   glClearColor(0.00, 0.00, 0.40, 1.00);
 
   sprintf(font_string, "-monotype-*-medium-r-normal--*-*-*-*-*-*-iso8859-1");
@@ -172,7 +187,24 @@ void glxSetup()
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
   glGetFloatv(GL_MODELVIEW_MATRIX, rotation_matrix);
+  /*
+  for(y=0;y<100;y++)
+    {
+      for(x=0;x<=100;x++)
+	{
+	  pixels[x*3+100*y*3+0] = sin(((y+x)/100.0)*2*M_PI)*127.0+127.0;
+	  pixels[x*3+100*y*3+1] = sin((x/100.0)*2*M_PI)*127.0+127.0;
+	  pixels[x*3+100*y*3+2] = sin((y/100.0)*2*M_PI)*127.0+127.0;
+	}
+    }
+  */
+
+  glGenTextures(1, &texture[0]);
+  glBindTexture(GL_TEXTURE_2D, texture[0]);
+  glTexImage2D(GL_TEXTURE_2D, 0, 3, box1.width, box1.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, box1.glxRawTexture);
+  /*glTexImage2D(GL_TEXTURE_2D, 0, 3, 100, 100, 0, GL_RGB, GL_UNSIGNED_BYTE, &pixels[0]);*/
+  glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
 
   calcSphere();
-
 }

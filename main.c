@@ -82,7 +82,9 @@ int main(int argc, char ** argv)
 
   gtk_init(&argc, &argv);
 
-  loadTextures();
+  botten=loadTexture("botten.png");
+  box1=loadTexture("box_c.png");
+  box2=loadTexture("box_45.png");
 
   initRoutine();
 
